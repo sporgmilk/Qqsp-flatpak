@@ -1,0 +1,13 @@
+diff --git a/qsp/objects.c b/qsp/objects.c
+index 7afb1ea..ddcbf92 100644
+--- a/qsp/objects.c
++++ b/qsp/objects.c
+@@ -65,7 +65,7 @@ void qspClearObjectsWithNotify()
+ 			qspExecLocByVarNameWithArgs(QSP_FMT("ONOBJDEL"), &v, 1);
+ 			if (qspRefreshCount != oldRefreshCount || qspErrorNum) break;
+ 		}
+-		qspFreeStrs(objs, oldCount);
++		qspFreeStrs((void **)objs, oldCount);
+ 	}
+ }
+ 

@@ -1,0 +1,49 @@
+id: io.Sonnix.Qqsp
+runtime: org.kde.Platform
+runtime-version: '5.15-25.08'
+sdk: org.kde.Sdk
+base: io.qt.qtwebengine.BaseApp
+base-version: "5.15-25.08"
+command: qsp-player
+finish-args:
+  - --share=ipc
+  - --socket=wayland
+  - --socket=x11
+  - --device=all
+  - --socket=pulseaudio
+  - --filesystem=home
+  - --env=QTWEBENGINEPROCESS_PATH=/app/bin/QtWebEngineProcess
+modules:
+  - name: qsp-player
+    buildsystem: simple
+    sources:
+      - type: git
+        url: https://gitlab.com/Sonnix1/Qqsp.git
+      - type: patch
+        path: game.patch
+        use-git: true
+      - type: patch
+        path: object.patch
+        use-git: true
+      - type: patch
+        path: statement.patch
+        use-git: true
+    build-options:
+      no-debuginfo: true
+      strip: true
+      env:
+        QMAKEPATH: /app/lib
+    build-commands:
+      -  mkdir -p /app/share/icons/hicolor/scalable/apps/
+      -  install -m644 icons/qsp-logo-vector.svg /app/share/icons/hicolor/scalable/apps/qsp.svg
+      -  mkdir -p build
+      -  cd build && qmake ../ PREFIX=/app && make
+      -  mkdir -p /app/bin
+      -  mkdir -p /app/share/applications
+         mkdir -p /app/share/icons
+         mkdir -p /app/share/licenses/qqsp
+         mkdir -p /app/share/mime/packages
+      -  install build/Qqsp /app/bin/qsp-player
+      -  install -m644 LICENSE /app/share/licenses/qqsp/
+      -  install -m644 Qqsp.desktop /app/share/applications/
+      -  install -m644 qsp.mime /app/share/mime/packages/qsp.xml
